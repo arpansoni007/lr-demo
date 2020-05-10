@@ -8,7 +8,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const { routes } = require('./routes/index');
+const routes = require('./routes/index');
 const MongoStore = require('connect-mongo')(session);
 
 /* --------------------------- Db Connection check -------------------------- */
@@ -42,7 +42,7 @@ app.set('view engine',ejs);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
-app.use(express.static(__dirname+'/resources/views'));
+app.use(express.static(__dirname+'/public'));
 
 /* ----------------------------------- old ---------------------------------- */
 
@@ -51,8 +51,9 @@ app.use(express.static(__dirname+'/resources/views'));
 
 
 /* ------------------------- new in express above version 4 ------------------------- */
-// app.use('/',routes);
 
+app.use('/',routes);
+// app.get('/',(req,res,next) => { return res.render('employees/index.ejs'); });
 
 
 /* ------------------------------- Catch error ------------------------------ */
@@ -73,6 +74,6 @@ app.use((err,req,res,next) => {
 
 
 /* ------------------------------ Port Connect ------------------------------ */
-app.listen(4100, () => {
+app.listen(4781, () => {
     console.log('Node App running on port:4000');
 });
