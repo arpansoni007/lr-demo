@@ -25,9 +25,28 @@ exports.login = async (req,res,next) => {
                 {   
                     if(data.password == req.body.password){
                        
-                        req.session.uniqueId = data.uniqueId;
-                        res.status(200).render('dashboard.ejs',{'name': data['_doc'].name,'email' : data['_doc'].email,'role': data['_doc'].role,
-                        'phone': data['_doc'].phone,'salary' : data['_doc'].salary,'id' : data['_doc']._id});
+                        if(data.role == 1){
+
+                       
+                        employee.find({},(err,all) =>
+                        {  
+                            // console.log('all',all);
+                            if(all)
+                            { console.log('dwa',all);
+                            req.session.uniqueId = data.uniqueId;
+                            res.render('dashboard.ejs',{'data': all,'role':1,'id':data._id,'name': data.name});
+                           
+                            }
+                        });
+                        }else
+                        {   
+                            req.session.uniqueId = data.uniqueId;
+                            res.render('dashboard.ejs',{'name': data['_doc'].name,'email' : data['_doc'].email,'role': data['_doc'].role,
+                            'phone': data['_doc'].phone,'salary' : data['_doc'].salary,'id' : data['_doc']._id,'role':data['_doc'].role,'data':data});
+
+                        }
+        
+                        
                        
                     }
                     else
@@ -49,7 +68,7 @@ exports.login = async (req,res,next) => {
 /* --------------------------------- Logout --------------------------------- */
 
 exports.logout = (req,res,next) => {
-    console.log('dw',req.session.uniqueId);
+    
   
          if(req.session.uniqueId != undefined)
          {  try
