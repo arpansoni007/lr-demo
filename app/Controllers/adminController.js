@@ -3,14 +3,14 @@ let employee = require('./../Models/employeeModel');
 
 /* ----------------------------- View Dashboard ----------------------------- */
 
-exports.dashboard = async (req, res, next) => {
+exports.dashboard = (req, res, next) => {
     
     employee.find({},(err,data) => {
           if(!data)
-          {
+          { console.log('dwa');
               res.redirect('/admin/dashboard');
           }
-          else{
+          else{   console.log('dwad');
               return res.render('admin/dashboard',{'data' : data});
           }
     });
@@ -22,9 +22,10 @@ exports.dashboard = async (req, res, next) => {
 
 exports.profile = async (req, res, next) => {
     try {
-        employee.findOne({ unique_id: req.session.uniqueId }, (err, data) => {
+        console.log('dwaddd');
+        employee.findOne({ _id: req.params.id }, (err, data) => {
             if (data) {
-                return res.render('employees/dashboard.ejs', { "data": data });
+                return res.render('admin/index.ejs', { "data": data });
             }
             else {
                 err = new Error('No user Found');
@@ -41,39 +42,39 @@ exports.profile = async (req, res, next) => {
 /* ----------------------------- Update Profile ----------------------------- */
 
 exports.updateProfile = async (req,res,next) => {
-    try{
-        const { profileData } = req.body;
-        
-        if(profileData.phone != '' || profileData.salary != '')
-        {
-            employee.findOne({unique_id : req.session.uniqueId}, (err,data) => {
-                if(!data)
-                {
-                    res.redirect('/');
-                }
-                else
-                {
-                    data.phone = profileData.phone;
-                    data.salary = profileData.salary;
-                }
+    console.log("kjj");
+    if(req.body.phone != '' || req.body.salary != '')
+    {   console.log('dwa',req.params.id);
+        employee.findOne({_id : req.params.id}, (err,data) => {
+            if(data == null)
+            {  console.log('fwfa');
+                res.send();
+            }
+            else
+            {    console.log('dddaw');
+                data.name = req.body.name;
+                data.phone = req.body.phone;
+                data.salary = req.body.salary;
+                data.city = req.body.city;
+                data.save();
+                res.render('admin/dashboard.ejs');
+            }
 
-            })
-        }
-        else
-        {    err = new Error('Please provide input data');
-             res.send(err);
-        }
+        })
     }
-    catch(err)
-    {
-        res.send(err);
+    else
+    {    console.log('dwad'); 
+        err = new Error('Please provide input data');
+         res.send(err);
     }
+
 }
 
 /* ------------------------------ Edit Employee ----------------------------- */
-exports.editEmployee = async (req,res,next) => {
+exports.editEmployee = (req,res,next) => {
     let employeeId = req.params.id;
-    if(!id)
+   
+    if(employeeId)
     { 
         employee.findOne({_id : employeeId}, (err,data) => {
             if(data)
@@ -94,34 +95,35 @@ exports.editEmployee = async (req,res,next) => {
 }
 
 
-/* ----------------------------- Updae Employee ----------------------------- */
+/* ----------------------------- Update Employee ----------------------------- */
 
-exports.updateEmployee = async (req,res,next) => {
-    try{
-       const { employeeData } = req.body;
-        
-        if(employeeData.phone != '' || employeeData.salary != '')
-        {
-            employee.findOne({_id : req.body.id}, (err,data) => {
-                if(!data)
-                {
-                    res.redirect('/');
+exports.updateEmployee = (req,res,next) => {
+  
+        if(req.body.phone != '' || req.body.salary != '')
+        {   console.log('dwa',req.params.id);
+            employee.findOne({_id : req.params.id}, (err,data) => {
+                if(data == null)
+                {  console.log('fwfa');
+                    res.send();
                 }
                 else
-                {
-                    data.phone = employeeData.phone;
-                    data.salary = employeeData.salary;
+                {    console.log('dddaw');
+                    data.name = req.body.name;
+                    data.phone = req.body.phone;
+                    data.salary = req.body.salary;
+                    data.city = req.body.city;
+                    data.save();
+                    res.render('admin/dashboard.ejs');
                 }
 
             })
         }
         else
-        {    err = new Error('Please provide input data');
+        {    console.log('dwad'); 
+            err = new Error('Please provide input data');
              res.send(err);
         }
-    }
-    catch(err)
-    {
-        res.send(err);
-    }
 }
+
+
+

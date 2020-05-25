@@ -28,10 +28,11 @@ router.route('/login')
  .post(loginController.login);
 
 
- router.route('/employees') 
+ router.route('/employees/dashboard') 
  .get(() => {employeeController.dashboard});
  
-
+ router.route('/admin/dashboard') 
+ .get(() => {adminController.dashboard});
 
 router.route('/employees/:id') 
 .get(employeeController.profile)
@@ -45,18 +46,21 @@ router.route('/employees/:id')
 /* ---------------------------- Admin  Routes--------------------------- */
 
 router.route('/admin/login')
-.get(() => {loginController.loginPage})
+.get(loginController.loginPage)
 .post(() => {loginController.login});
 
 
 
 router.route('/admin/:id?')
-.get(() => {adminController.dashboard})
-.get(() => {adminController.editEmployee})
-.put(() => {adminController.updateEmployee})
-.get(() => {adminController.profile})
-.post(() => {adminController.profileUpdate});
+.get(adminController.profile)
 
+
+router.route('/admin/update/:id')
+.post(() => {adminController.updateProfile});
+
+router.route('/admin/employee/:id?')
+.get(adminController.editEmployee)
+.post(adminController.updateEmployee);
 
 /* ------------------------- Forget Password Routes ------------------------- */
 router.route('/forget-password/:email?')

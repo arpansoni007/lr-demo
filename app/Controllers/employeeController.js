@@ -11,7 +11,7 @@ exports.dashboard = async (req, res, next) => {
 /* ------------------------------ View Profile ------------------------------ */
 
 exports.profile = async (req, res, next) => {
-    try { 
+    
         employee.findOne({ _id: req.params.id }, (err, data) => {
             if (data) {
                
@@ -23,42 +23,44 @@ exports.profile = async (req, res, next) => {
                 res.redirect('/');
             }
         })
-        // return res.render('employees/index.ejs');
-    }
-    catch (err) {
-        res.send('Error occured');
-    }
+    
 }
 
 /* ----------------------------- Update Profile ----------------------------- */
 
 exports.updateProfile = async (req,res,next) => {
     try{ 
-        console.log('dwa');
+        
         let {newData} =  req.body;
         if(req.body)
         {  console.log('fefeef');
             employee.findOne({  _id: req.params.id},(err,data) => {
                 if(!data)
-                {  console.log('ff');
+                { console.log('kjk');
                     res.redirect('/');
                 }
                 else
-                {  
-                    let update = employee.update({_id: req.params.id}, req.body);
-                    res.status(200).render('dashboard.ejs',{'name': req.body.name,'email' : req.body.email,'role': req.body.role,
+                {  console.log('jhjh');
+                    let update = employee.findById({_id: req.params.id},(err,data)=>{ 
+                         data.name = req.body.name;
+                         data.phone = req.body.phone;
+                         data.salary = req.body.salary;
+                         data.city = req.body.city;
+                         data.save();
+                    res.render('dashboard.ejs',{'name': req.body.name,'email' : req.body.email,'role': req.body.role,
                     'phone': req.body.phone,'salary' : req.body.salary,'id' : req.params.id});
-                }
+                    });
 
-            })
+            }
+            });
         }
         else
         {    let err = new Error('Please provide input data');
-             res.send('dwad');
+             res.send(err);
         }
     }
     catch(err)
     {
-        res.send('dwadff');
+        res.send(err);
     }
 }

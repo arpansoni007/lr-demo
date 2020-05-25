@@ -1,5 +1,17 @@
   <!-- LIST -->
-  <div class="col-md-6">
+  <% include('partials/header.ejs')%>
+  <div class="col-md-6 content-centre">
+
+    <div class="abc">
+        Welcome <%= name %>
+        <% if(role != 1) {%>
+            <a href="/employees/<%=id%>">Profile</a>
+        
+            <% } else { %>
+                <a href="/admin/<%=id%>">Profile</a>
+
+            <% } %>
+        </div>
     <table class="table table-bordered table-hover">
         <thead>
             <tr>
@@ -13,7 +25,7 @@
         <tbody>
             
               
-              
+              <% if(role != 1) {%>
                 <tr>
                     <td><%= 1%></td>
                     <td><strong><%= name %></strong></td>
@@ -26,11 +38,33 @@
                         </a>
                     </td>
                 </tr>
-           
-        </tbody>
-    </table>
+             <% }else{%>
+               <%if(data) {%>
+                <% for(i=1;i<data.length;i++){%>
+                <tr>
+                    <td><%= i %></td>
+                    <td><strong><%= data[i].name %></strong></td>
+                    <td><%= data[i].phone %></td>
+                    <td><%= data[i].salary %></td>
+                    <td>
+                        
+                        <a href="/admin/employee/<%= data[i].id %>" class="btn btn-info">
+                            Edit
+                        </a>
+                    </td>
+                </tr>
+                <% }%>
+                <% }%>
+
+
+            </tbody>
+        </table>
+        
+        <%}%>
+
     <div class="abc">
-        <a href="/logout">Logout</a>
+        <a class="lg-1" href="/logout">Logout</a>
     </div>
 </div>
+<% include('partials/footer.ejs')%>
 </div>
